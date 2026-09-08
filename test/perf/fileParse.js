@@ -75,3 +75,5 @@ function benchmark(fn) {
 }
 
 module.exports = { benchmark, baseline };
+
+// TODO(pseudoical): Create a reusable benchmark wrapper.
