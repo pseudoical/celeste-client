@@ -6,10 +6,14 @@ const fs   = require('fs');
 const fsp  = fs.promises;
 
 const getSwapperFolder = () =>
+    // TODO: Determine if lazy loading the path is necessary. If not, consider
+    // static processing and returning the result to reduce overhead.
     path.join(app.getPath('documents'), 'CelesteClient', 'swapper', 'assets');
 
 const initResourceSwapper = async (enabled) => {
+    // TODO: Store the custom scheme in a variable for reuse.
     protocol.registerFileProtocol('celeste', (request, callback) => {
+        // TODO: Replace regex with string slice using the prefix length.
         let p = request.url.replace(/^celeste:\/\//i, '');
         if (p.startsWith('/')) p = p.slice(1);
         if (process.platform === 'win32' && /^[a-zA-Z]\//.test(p)) {
@@ -18,6 +22,7 @@ const initResourceSwapper = async (enabled) => {
         callback({ path: decodeURIComponent(p) });
     });
 
+    // TODO: Reuse this path in getSwapperFolder.
     const SWAP_FOLDER = path.join(app.getPath('documents'), 'CelesteClient', 'swapper');
     const subFolders  = ['media', 'img'];
 
@@ -30,6 +35,7 @@ const initResourceSwapper = async (enabled) => {
 
     try {
         protocol.registerFileProtocol('file', (request, callback) => {
+            // TODO: Replace regex with string slice using the prefix length.
             let p = request.url.replace(/^file:\/\/\//i, '');
             if (process.platform === 'win32' && p.startsWith('/')) p = p.slice(1);
             callback(decodeURIComponent(p));
@@ -49,6 +55,7 @@ const initResourceSwapper = async (enabled) => {
             const filePath = path.join(dir, entry.name);
             if (entry.isDirectory()) return collectSwapFiles(filePath);
             const relPath = path.relative(SWAP_FOLDER, filePath).replace(/\\/g, '/');
+            // TODO: Benchmark alternatives: single pass, regex match, etc.
             if (!relPath.startsWith('assets/media/') && !relPath.startsWith('assets/img/')) return;
             const cleanedKey = `://kirka.io/${relPath}`.replace(/_/g, '');
             swapFiles[cleanedKey] = filePath.replace(/\\/g, '/');
@@ -65,6 +72,8 @@ const initResourceSwapper = async (enabled) => {
             const cleanedUrl = details.url.replace(/https|http|(\?.*)|(\#.*)|\_/gi, '');
             const localFile  = swapFiles[cleanedUrl];
             if (localFile) {
+                // TODO: Store the custom scheme prefix in swapFiles keys to
+                // reduce string concatenation overhead.
                 callback({ redirectURL: 'celeste://' + localFile });
             } else {
                 callback({});
