@@ -11,26 +11,11 @@
 
 // @ts-check
 
-const assert = require("node:assert/strict");
-const test = require("node:test");
+const { createBenchmark } = require("./benchmark");
 
 /**
  * @typedef {{ url: string }} MockRequest
  */
-
-// NOTE: These paths are safe to test on any platform because the
-// implementations only parse URL strings. They do not access the filesystem
-// or verify that the resulting paths exist.
-const cases = [
-    { url: "file:///C:/Documents/project/assets/img/image.png" },
-    { url: "file:///C:/Documents/project/assets/img/My%20File.webp" },
-    { url: "file:///C:/Documents/project/assets/img/Test.jpg" },
-    { url: "file:///home/user/Documents/project/assets/img/image.png" },
-    { url: "file:///home/user/Documents/project/assets/img/My%20File.webp" },
-    { url: "file:///home/user/Documents/project/assets/img/Test.jpg" },
-];
-
-const iterations = 1_000_000;
 
 /**
  * Original implementation from src/components/swapper.js to compare against.
@@ -43,37 +28,21 @@ function baseline(request) {
     return decodeURIComponent(p);
 }
 
-/**
- * @param {(details: MockRequest) => string} fn
- * @returns {void}
- * @throws {AssertionError} If the implementations produce different results.
- */
-function validate(fn) {
-    for (const x of cases) {
-        const actual = fn(x);
-        const expected = baseline(x);
-        assert.strictEqual(actual, expected);
-    }
-}
+// NOTE: These paths are safe to test on any platform because the
+// implementations only parse URL strings. They do not access the filesystem
+// or verify that the resulting paths exist.
+/** @type {[MockRequest][]} */
+const cases = [
+    [{ url: "file:///C:/Documents/project/assets/img/image.png" }],
+    [{ url: "file:///C:/Documents/project/assets/img/My%20File.webp" }],
+    [{ url: "file:///C:/Documents/project/assets/img/Test.jpg" }],
+    [{ url: "file:///home/user/Documents/project/assets/img/image.png" }],
+    [{ url: "file:///home/user/Documents/project/assets/img/My%20File.webp" }],
+    [{ url: "file:///home/user/Documents/project/assets/img/Test.jpg" }],
+];
 
-/**
- * @param {(request: MockRequest) => string} fn
- * @returns {void}
- */
-function benchmark(fn) {
-    test(fn.name, () => {
-        validate(fn);
+const iterations = 1_000_000;
 
-        const start = performance.mark(fn.name);
-        for (let i = 0; i < iterations; ++i) {
-            fn(cases[i % cases.length]);
-        }
-        const measure = performance.measure(fn.name, start);
-
-        console.log(measure);
-    });
-}
+const benchmark = createBenchmark(baseline, cases, iterations);
 
 module.exports = { benchmark, baseline };
-
-// TODO(pseudoical): Create a reusable benchmark wrapper.
