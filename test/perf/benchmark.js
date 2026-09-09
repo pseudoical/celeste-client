@@ -35,7 +35,7 @@ function createBenchmark(baseline, cases, iterations) {
 
             const start = performance.mark(fn.name);
             for (let i = 0; i < iterations; ++i) {
-                const args = cases[i % cases.length];
+                const args = cases[i % cases.length] ?? [];
                 fn(...args);
             }
             const measure = performance.measure(fn.name, start);
