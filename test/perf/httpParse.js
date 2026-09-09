@@ -17,27 +17,13 @@
  * capital letters in the `details.url` protocol.
  */
 
-// test(httpParse): add http URL parsing benchmarks
-
 // @ts-check
 
-const assert = require("node:assert/strict");
-const { test } = require("node:test");
+const { createBenchmark } = require("./benchmark");
 
 /**
  * @typedef {{ url: string }} MockDetails
  */
-
-const cases = [
-    { url: "http://www.example.com/assets/media/sound.mp4" },
-    { url: "https://api.example.com/assets/img/texture.png" },
-    { url: "https://example.com/assets/media/__sound__" },
-    { url: "http://example.io/assets/img/__texture__.webp?v=123" },
-    { url: "https://example.io/assets/img/Texture.123.png#foo_bar" },
-    { url: "https://example.io/assets/media/Foo_Bar?v=123#fragment" },
-];
-
-const iterations = 1_000_000;
 
 /**
  * Original implementation from src/components/swapper.js to compare against.
@@ -49,35 +35,18 @@ function baseline(details) {
     return cleanedUrl;
 }
 
-/**
- * @param {(details: MockDetails) => string} fn
- * @returns {void}
- * @throws {AssertionError} If the implementations produce different results.
- */
-function validate(fn) {
-    for (const x of cases) {
-        const actual = fn(x);
-        const expected = baseline(x);
-        assert.strictEqual(actual, expected);
-    }
-}
+/** @type {[MockDetails][]} */
+const cases = [
+    [{ url: "http://www.example.com/assets/media/sound.mp4" }],
+    [{ url: "https://api.example.com/assets/img/texture.png" }],
+    [{ url: "https://example.com/assets/media/__sound__" }],
+    [{ url: "http://example.io/assets/img/__texture__.webp?v=123" }],
+    [{ url: "https://example.io/assets/img/Texture.123.png#foo_bar" }],
+    [{ url: "https://example.io/assets/media/Foo_Bar?v=123#fragment" }],
+];
 
-/**
- * @param {(details: MockDetails) => string} fn
- * @returns {void}
- */
-function benchmark(fn) {
-    test(fn.name, () => {
-        validate(fn);
+const iterations = 1_000_000;
 
-        const start = performance.mark(fn.name);
-        for (let i = 0; i < iterations; ++i) {
-            fn(cases[i % cases.length]);
-        }
-        const measure = performance.measure(fn.name, start);
-
-        console.log(measure);
-    });
-}
+const benchmark = createBenchmark(baseline, cases, iterations);
 
 module.exports = { benchmark, baseline };
