@@ -14,6 +14,8 @@ const initResourceSwapper = async (enabled) => {
     protocol.registerFileProtocol(customScheme, (request, callback) => {
         let p = request.url.slice(`${customScheme}://`.length);
         if (p.startsWith('/')) p = p.slice(1);
+        // TODO: Benchmark alternatives against regex: charCodeAt() range,
+        // character comparison, etc.
         if (process.platform === 'win32' && /^[a-zA-Z]\//.test(p)) {
             p = p.charAt(0) + ':' + p.slice(1);
         }
@@ -30,6 +32,7 @@ const initResourceSwapper = async (enabled) => {
     if (!enabled) return;
 
     try {
+        // TODO: Consider creating a file protocol variable for reuse.
         protocol.registerFileProtocol('file', (request, callback) => {
             let p = request.url.slice('file:///'.length);
             if (process.platform === 'win32' && p.startsWith('/')) p = p.slice(1);
@@ -66,6 +69,7 @@ const initResourceSwapper = async (enabled) => {
             if (!hasSwapFiles) return callback({}); 
             const cleanedUrl = details.url.replace(/https|http|(\?.*)|(\#.*)|\_/gi, '');
             const localFile  = swapFiles[cleanedUrl];
+            // TODO: Consider refactoring if/else with a ternary.
             if (localFile) {
                 callback({ redirectURL: localFile });
             } else {
