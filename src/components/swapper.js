@@ -30,7 +30,6 @@ const initResourceSwapper = async (enabled) => {
     if (!enabled) return;
 
     try {
-        // TODO: Consider creating a file protocol variable for reuse.
         protocol.registerFileProtocol('file', (request, callback) => {
             let p = request.url.slice('file:///'.length);
             if (process.platform === 'win32' && p.startsWith('/')) p = p.slice(1);
