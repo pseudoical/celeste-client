@@ -65,11 +65,7 @@ const initResourceSwapper = async (enabled) => {
             if (!hasSwapFiles) return callback({}); 
             const cleanedUrl = details.url.replace(/https|http|(\?.*)|(\#.*)|\_/gi, '');
             const localFile  = swapFiles[cleanedUrl];
-            if (localFile) {
-                callback({ redirectURL: localFile });
-            } else {
-                callback({});
-            }
+            callback(localFile ? { redirectURL: localFile } : {});
         }
     );
 };
