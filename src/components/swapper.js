@@ -10,9 +10,9 @@ const swapperFolder = path.join(SWAP_FOLDER, 'assets');
 const getSwapperFolder = () => swapperFolder;
 
 const initResourceSwapper = async (enabled) => {
-    // TODO: Store the custom scheme in a variable for reuse.
-    protocol.registerFileProtocol('celeste', (request, callback) => {
-        let p = request.url.slice('celeste://'.length);
+    const customScheme = 'celeste';
+    protocol.registerFileProtocol(customScheme, (request, callback) => {
+        let p = request.url.slice(`${customScheme}://`.length);
         if (p.startsWith('/')) p = p.slice(1);
         if (process.platform === 'win32' && /^[a-zA-Z]\//.test(p)) {
             p = p.charAt(0) + ':' + p.slice(1);
@@ -53,7 +53,7 @@ const initResourceSwapper = async (enabled) => {
             // TODO: Benchmark alternatives: single pass, regex match, etc.
             if (!relPath.startsWith('assets/media/') && !relPath.startsWith('assets/img/')) return;
             const cleanedKey = `://kirka.io/${relPath}`.replace(/_/g, '');
-            swapFiles[cleanedKey] = 'celeste://' + filePath.replace(/\\/g, '/');
+            swapFiles[cleanedKey] = `${customScheme}://` + filePath.replace(/\\/g, '/');
         }));
     }
 
