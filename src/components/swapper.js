@@ -5,8 +5,8 @@ const path = require('path');
 const fs   = require('fs');
 const fsp  = fs.promises;
 
-const getSwapperFolder = () =>
-    path.join(app.getPath('documents'), 'CelesteClient', 'swapper', 'assets');
+const swapperFolder = path.join(app.getPath('documents'), 'CelesteClient', 'swapper', 'assets');
+const getSwapperFolder = () => swapperFolder;
 
 const initResourceSwapper = async (enabled) => {
     protocol.registerFileProtocol('celeste', (request, callback) => {
