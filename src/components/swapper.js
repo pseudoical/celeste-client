@@ -53,7 +53,6 @@ const initResourceSwapper = async (enabled) => {
             const filePath = path.join(dir, entry.name);
             if (entry.isDirectory()) return collectSwapFiles(filePath);
             const relPath = path.relative(SWAP_FOLDER, filePath).replace(/\\/g, '/');
-            // TODO: Benchmark alternatives: single pass, regex match, etc.
             if (!relPath.startsWith('assets/media/') && !relPath.startsWith('assets/img/')) return;
             const cleanedKey = `://kirka.io/${relPath}`.replace(/_/g, '');
             swapFiles[cleanedKey] = `${customScheme}://` + filePath.replace(/\\/g, '/');
