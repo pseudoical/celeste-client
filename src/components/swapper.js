@@ -5,7 +5,8 @@ const path = require('path');
 const fs   = require('fs');
 const fsp  = fs.promises;
 
-const swapperFolder = path.join(app.getPath('documents'), 'CelesteClient', 'swapper', 'assets');
+const SWAP_FOLDER = path.join(app.getPath('documents'), 'CelesteClient', 'swapper');
+const swapperFolder = path.join(SWAP_FOLDER, 'assets');
 const getSwapperFolder = () => swapperFolder;
 
 const initResourceSwapper = async (enabled) => {
