@@ -12,8 +12,7 @@ const getSwapperFolder = () => swapperFolder;
 const initResourceSwapper = async (enabled) => {
     // TODO: Store the custom scheme in a variable for reuse.
     protocol.registerFileProtocol('celeste', (request, callback) => {
-        // TODO: Replace regex with string slice using the prefix length.
-        let p = request.url.replace(/^celeste:\/\//i, '');
+        let p = request.url.slice('celeste://'.length);
         if (p.startsWith('/')) p = p.slice(1);
         if (process.platform === 'win32' && /^[a-zA-Z]\//.test(p)) {
             p = p.charAt(0) + ':' + p.slice(1);
@@ -32,8 +31,7 @@ const initResourceSwapper = async (enabled) => {
 
     try {
         protocol.registerFileProtocol('file', (request, callback) => {
-            // TODO: Replace regex with string slice using the prefix length.
-            let p = request.url.replace(/^file:\/\/\//i, '');
+            let p = request.url.slice('file:///'.length);
             if (process.platform === 'win32' && p.startsWith('/')) p = p.slice(1);
             callback(decodeURIComponent(p));
         });
