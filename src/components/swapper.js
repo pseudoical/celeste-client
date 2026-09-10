@@ -5,10 +5,8 @@ const path = require('path');
 const fs   = require('fs');
 const fsp  = fs.promises;
 
-const getSwapperFolder = () =>
-    // TODO: Determine if lazy loading the path is necessary. If not, consider
-    // static processing and returning the result to reduce overhead.
-    path.join(app.getPath('documents'), 'CelesteClient', 'swapper', 'assets');
+const swapperFolder = path.join(app.getPath('documents'), 'CelesteClient', 'swapper', 'assets');
+const getSwapperFolder = () => swapperFolder;
 
 const initResourceSwapper = async (enabled) => {
     // TODO: Store the custom scheme in a variable for reuse.
