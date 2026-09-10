@@ -19,7 +19,7 @@
 
 // @ts-check
 
-const { createBenchmark } = require("./benchmark");
+const { createBenchmark } = require("./benchmark.js");
 
 /**
  * @typedef {{ url: string }} MockDetails

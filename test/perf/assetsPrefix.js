@@ -13,7 +13,7 @@
 
 // @ts-check
 
-const { createBenchmark } = require("./benchmark");
+const { createBenchmark } = require("./benchmark.js");
 
 /**
  * Original implementation from src/components/swapper.js to compare against.

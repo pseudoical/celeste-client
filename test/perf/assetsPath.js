@@ -10,7 +10,7 @@
 
 // @ts-check
 
-const { createBenchmark } = require("./benchmark");
+const { createBenchmark } = require("./benchmark.js");
 const path = require("path");
 
 // Mock the application documents path.
