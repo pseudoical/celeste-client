@@ -14,8 +14,6 @@ const initResourceSwapper = async (enabled) => {
     protocol.registerFileProtocol(customScheme, (request, callback) => {
         let p = request.url.slice(`${customScheme}://`.length);
         if (p.startsWith('/')) p = p.slice(1);
-        // TODO: Benchmark alternatives against regex: charCodeAt() range,
-        // character comparison, etc.
         if (process.platform === 'win32' && /^[a-zA-Z]\//.test(p)) {
             p = p.charAt(0) + ':' + p.slice(1);
         }
