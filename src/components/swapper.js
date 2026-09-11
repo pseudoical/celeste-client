@@ -10,7 +10,6 @@ const swapperFolder = path.join(SWAP_FOLDER, 'assets');
 const getSwapperFolder = () => swapperFolder;
 
 const initResourceSwapper = async (enabled) => {
-    // TODO: Store the custom scheme in a variable for reuse.
     protocol.registerFileProtocol('celeste', (request, callback) => {
         let p = request.url.slice('celeste://'.length);
         if (p.startsWith('/')) p = p.slice(1);
