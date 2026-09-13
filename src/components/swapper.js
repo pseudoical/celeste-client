@@ -53,19 +53,19 @@ const initResourceSwapper = async (enabled) => {
             const relPath = path.relative(SWAP_FOLDER, filePath).replace(/\\/g, '/');
             if (!relPath.startsWith('assets/media/') && !relPath.startsWith('assets/img/')) return;
             const cleanedKey = `://kirka.io/${relPath}`.replace(/_/g, '');
-            swapFiles[cleanedKey] = filePath.replace(/\\/g, '/');
+            swapFiles[cleanedKey] = 'celeste://' + filePath.replace(/\\/g, '/');
         }));
     }
 
     await collectSwapFiles(SWAP_FOLDER);
-    const hasSwapFiles = Object.keys(swapFiles).length > 0;
 
     session.defaultSession.webRequest.onBeforeRequest(
         { urls: ['*://kirka.io/*', '*://*.kirka.io/*'], types: ['image', 'media'] },
         (details, callback) => {
-            if (!hasSwapFiles) return callback({}); 
-            const cleanedUrl = details.url.replace(/https|http|(\?.*)|(\#.*)|\_/gi, '');
-            callback(cleanedUrl in swapFiles ? { redirectURL: 'celeste://' + cleanedUrl } : {});
+            if (Object.keys(swapFiles).length === 0) return callback({}); 
+            const cleanedUrl = details.url.replace(/^https?|(\?.*)|(\#.*)|\_/gi, '');
+            const localFile  = swapFiles[cleanedUrl];
+            callback(localFile ? { redirectURL: localFile } : {});
         }
     );
 };
