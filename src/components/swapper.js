@@ -53,7 +53,7 @@ const initResourceSwapper = async (enabled) => {
             const relPath = path.relative(SWAP_FOLDER, filePath).replace(/\\/g, '/');
             if (!relPath.startsWith('assets/media/') && !relPath.startsWith('assets/img/')) return;
             const cleanedKey = `://kirka.io/${relPath}`.replace(/_/g, '');
-            swapFiles[cleanedKey] = 'celeste://' + filePath.replace(/\\/g, '/');
+            swapFiles[cleanedKey] = filePath.replace(/\\/g, '/');
         }));
     }
 
