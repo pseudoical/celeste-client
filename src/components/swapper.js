@@ -64,8 +64,7 @@ const initResourceSwapper = async (enabled) => {
         (details, callback) => {
             if (Object.keys(swapFiles).length === 0) return callback({}); 
             const cleanedUrl = details.url.replace(/^https?|(\?.*)|(\#.*)|\_/gi, '');
-            const localFile  = swapFiles[cleanedUrl];
-            callback(localFile ? { redirectURL: localFile } : {});
+            callback(cleanedUrl in swapFiles ? { redirectURL: 'celeste://' + cleanedUrl } : {});
         }
     );
 };
