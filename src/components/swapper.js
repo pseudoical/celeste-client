@@ -22,7 +22,6 @@ const initResourceSwapper = async (enabled) => {
         }
         callback({ path: decodeURIComponent(p) });
     });
-
     const subFolders  = ['media', 'img'];
 
     subFolders.forEach(folder => {
